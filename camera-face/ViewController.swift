@@ -21,10 +21,18 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let sender = segue.destination as? CaptureViewController, let name = nameTF.text, !name.isEmpty {
-            sender.username = name
+    @IBAction func nextAction(_ sender: Any) {
+        if let captureVC = self.storyboard?.instantiateViewController(withIdentifier: "CaptureViewController") as? CaptureViewController {
+            if let name = nameTF.text?.replacingOccurrences(of: " ", with: ""), !name.isEmpty {
+                captureVC.username = name
+                self.navigationController?.pushViewController(captureVC, animated: true)
+            } else {
+                let alert = UIAlertController.init(title: "Error", message: "Please enter your name", preferredStyle: .alert)
+                alert.addAction(UIAlertAction.init(title: "OK", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }
+        
     }
 }
 

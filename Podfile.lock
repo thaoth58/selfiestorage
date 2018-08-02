@@ -1,0 +1,21 @@
+PODS:
+  - Backendless (5.1.0):
+    - Socket.IO-Client-Swift
+  - Socket.IO-Client-Swift (13.3.0):
+    - Starscream (~> 3.0.2)
+  - Starscream (3.0.5)
+  - SVProgressHUD (2.2.5)
+
+DEPENDENCIES:
+  - Backendless
+  - SVProgressHUD
+
+SPEC CHECKSUMS:
+  Backendless: 02950ff8338eaac9a1590dfc6e0afc95a4b87ca5
+  Socket.IO-Client-Swift: 0afb192a562db90d50e3f7f7421c06925a3f0179
+  Starscream: faf918b2f2eff7d5dd21180646bf015a669673bd
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+
+PODFILE CHECKSUM: 1d12e71db7a70e6e10d940826f87c7a610adf255
+
+COCOAPODS: 1.4.0

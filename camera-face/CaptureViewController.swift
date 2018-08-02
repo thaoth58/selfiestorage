@@ -8,10 +8,15 @@
 
 import UIKit
 import AVFoundation
+import SVProgressHUD
 
 class CaptureViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var currentLabel: UILabel!
+    @IBOutlet weak var imageContainerView: UIView!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var uploadButton: UIButton!
+    @IBOutlet weak var cancelButton: UIButton!
     
     var username = "No-name"
     
@@ -25,6 +30,7 @@ class CaptureViewController: UIViewController {
     let APPLICATION_ID = "92EDABB5-A180-564B-FF11-8B3A88B98400"
     let API_KEY = "ECAD7F52-2DD8-B327-FF47-7C8C0B35F200"
     let SERVER_URL = "https://api.backendless.com"
+    var currentImageData: Data? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,24 +88,44 @@ class CaptureViewController: UIViewController {
                 (imageDataSampleBuffer, error) -> Void in
                 if let imageDataSampleBuffer = imageDataSampleBuffer {
                     if let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer) {
-                        self.uploadImage(data: imageData)
+                        self.imageContainerView.isHidden = false
+                        self.imageView.image = UIImage.init(data: imageData)
+                        self.currentImageData = imageData
                     }
                 }
             }
         }
     }
     
-    func uploadImage(data: Data) {
+    @IBAction func uploadAction(_ sender: Any) {
         total += 1
         updateCurrentLabel()
-        let name = username + Date.timeIntervalSinceReferenceDate.description + ".jpeg"
-        Backendless.sharedInstance().fileService.uploadFile(name, content: data, response: { (file) in
-            self.uploaded += 1
-            self.updateCurrentLabel()
-        }) { (error) in
-            if let error = error {
-                print("Upload error: " + error.description)
+        let name = username + "-" + Date.timeIntervalSinceReferenceDate.description + ".jpeg"
+        if let data = currentImageData {
+            SVProgressHUD.setDefaultMaskType(.black)
+            SVProgressHUD.show()
+            Backendless.sharedInstance().fileService.uploadFile(name, content: data, response: { (file) in
+                self.uploaded += 1
+                self.updateCurrentLabel()
+                SVProgressHUD.dismiss()
+                self.imageContainerView.isHidden = true
+                self.currentImageData = nil
+            }) { (error) in
+                SVProgressHUD.dismiss()
+                if let error = error {
+                    print("Upload error: " + error.description)
+                }
+                self.imageContainerView.isHidden = true
+                self.currentImageData = nil
             }
         }
+    }
+    
+    @IBAction func cancelAction(_ sender: Any) {
+        self.imageContainerView.isHidden = true
+        currentImageData = nil
+    }
+    
+    func uploadImage(data: Data) {
     }
 }

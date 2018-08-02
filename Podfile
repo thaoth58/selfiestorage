@@ -6,7 +6,7 @@ target 'camera-face' do
   use_frameworks!
 
 pod 'Backendless'
-
+pod 'SVProgressHUD'
   # Pods for camera-face
 
 end
